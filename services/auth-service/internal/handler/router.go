@@ -6,13 +6,15 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/mrxacker/inventory-management-system/services/auth-service/internal/config"
+	"github.com/mrxacker/inventory-management-system/shared/logger"
 )
 
-func SetupRouter(productHandler *ProductHandler, cfg *config.Config) *gin.Engine {
+func SetupRouter(productHandler *ProductHandler, cfg *config.Config, log logger.Logger) *gin.Engine {
 	router := gin.New()
 
 	// Middleware
-	router.Use(gin.Recovery())
+	router.Use(logger.GinRecovery(log))
+	router.Use(logger.GinLogger(log))
 	router.Use(corsMiddleware())
 
 	// Health check

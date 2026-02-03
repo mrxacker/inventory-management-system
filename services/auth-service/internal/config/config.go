@@ -51,7 +51,9 @@ type JWTConfig struct {
 }
 
 type LogConfig struct {
-	Level string
+	Level       string
+	OutputPaths []string
+	ErrorPaths  []string
 }
 
 func LoadConfig() (*Config, error) {

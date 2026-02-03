@@ -46,8 +46,8 @@ func setupLogger(cfg *config.Config) logger.Logger {
 	log := logger.NewLoggerWithConfig(logger.LogConfig{
 		Level:       cfg.Log.Level,
 		Environment: cfg.Server.Environment,
-		OutputPaths: []string{"stdout", "logs/app.log"},
-		ErrorPaths:  []string{"stderr", "logs/error.log"},
+		OutputPaths: cfg.Log.OutputPaths,
+		ErrorPaths:  cfg.Log.ErrorPaths,
 	})
 	defer log.Sync()
 
@@ -64,7 +64,7 @@ func StartServer(ctx context.Context, cfg *config.Config, productHandler *handle
 		gin.SetMode(gin.ReleaseMode)
 	}
 
-	router := handler.SetupRouter(productHandler, cfg)
+	router := handler.SetupRouter(productHandler, cfg, log)
 
 	// Create HTTP server
 	srv := &http.Server{
@@ -90,7 +90,7 @@ func StartServer(ctx context.Context, cfg *config.Config, productHandler *handle
 	log.Info("Shutting down server...")
 
 	// Graceful shutdown with timeout
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	ctx, cancel := context.WithTimeout(ctx, 30*time.Second)
 	defer cancel()
 
 	if err := srv.Shutdown(ctx); err != nil {
