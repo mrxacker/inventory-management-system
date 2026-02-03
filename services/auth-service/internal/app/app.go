@@ -12,14 +12,10 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/mrxacker/inventory-management-system/services/auth-service/internal/config"
+	"github.com/mrxacker/inventory-management-system/services/auth-service/internal/database"
 	"github.com/mrxacker/inventory-management-system/services/auth-service/internal/handler"
 	"github.com/mrxacker/inventory-management-system/shared/logger"
 )
-
-func RunMigrations() error {
-	// Placeholder for migration logic
-	return nil
-}
 
 func StartApp(ctx context.Context) error {
 
@@ -31,6 +27,13 @@ func StartApp(ctx context.Context) error {
 
 	log := setupLogger(cfg)
 
+	db, err := database.InitDatabase(cfg)
+	if err != nil {
+		log.Fatal("Failed to initialize database", "error", err)
+		return err
+	}
+	defer db.Close()
+
 	productHandler := handler.NewProductHandler()
 
 	err = StartServer(ctx, cfg, productHandler, log)
@@ -38,7 +41,6 @@ func StartApp(ctx context.Context) error {
 		log.Fatal("Failed to start server", "error", err)
 		return err
 	}
-
 	return nil
 }
 
