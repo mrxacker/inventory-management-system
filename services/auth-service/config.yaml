@@ -9,8 +9,8 @@ postgres:
   host: "localhost"
   port: "5432"
   user: "postgres"
-  password: "secret2"
-  name: "product_db"
+  password: "secret"
+  name: "auth_db"
   sslmode: "disable"
   maxIdleConns: 10
   maxOpenConns: 100

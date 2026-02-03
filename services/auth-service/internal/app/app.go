@@ -5,9 +5,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"os"
-	"os/signal"
-	"syscall"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -77,17 +74,24 @@ func StartServer(ctx context.Context, cfg *config.Config, productHandler *handle
 		IdleTimeout:    time.Duration(cfg.Server.IdleTimeout) * time.Second,
 		MaxHeaderBytes: 1 << 20, // 1 MB
 	}
+
+	errChan := make(chan error, 1)
+
 	go func() {
 		log.Info("Starting server", "port", cfg.Server.Port, "environment", cfg.Server.Environment)
-		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			log.Fatal("Failed to start server", "error", err)
+		if err := srv.ListenAndServe(); err != nil {
+			errChan <- fmt.Errorf("HTTP server error: %w", err)
 		}
+
 	}()
 
-	// Wait for interrupt signal for graceful shutdown
-	quit := make(chan os.Signal, 1)
-	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
-	<-quit
+	select {
+	case <-ctx.Done():
+		log.Info("Shutdown signal received")
+	case err := <-errChan:
+		log.Info("Server error", "error", err)
+		return err
+	}
 
 	log.Info("Shutting down server...")
 
