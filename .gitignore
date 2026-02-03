@@ -1,0 +1,59 @@
+# Go build outputs
+bin/
+build/
+dist/
+
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test binary, built with `go test -c`
+*.test
+
+# Coverage and profiling
+*.coverprofile
+coverage.out
+*.cov
+
+# Go tool output
+pkg/
+
+# Dependency directories
+# Uncomment if you do not commit vendor/
+# vendor/
+
+# Godeps
+Godeps/
+
+# IDEs and editors
+.idea/
+*.iml
+.vscode/
+*.code-workspace
+*.sublime-* 
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs and temp files
+*.log
+*.tmp
+tmp/
+temp/
+
+# Environment files (may contain secrets)
+.env
+.env.*
+
+# Generated files
+generated/
+
+# Ignore local config and runtime files
+*.local
+
+.env
