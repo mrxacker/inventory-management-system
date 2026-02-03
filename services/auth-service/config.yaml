@@ -1,0 +1,31 @@
+server:
+  port: "8081"
+  environment: "development"
+  readTimeout: 10
+  writeTimeout: 10
+  idleTimeout: 120
+
+postgres:
+  host: "localhost"
+  port: "5432"
+  user: "postgres"
+  password: "secret2"
+  name: "product_db"
+  sslmode: "disable"
+  maxIdleConns: 10
+  maxOpenConns: 100
+  connMaxLifetime: 60
+
+redis:
+  host: "localhost"
+  port: "6379"
+  password: "secret"
+  db: 0
+
+jwt:
+  secret: "your-secret-key-change-in-production"
+  expiration: 24h
+
+log:
+  level: "info"
+  
